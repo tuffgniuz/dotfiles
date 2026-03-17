@@ -3,6 +3,8 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+SKIP_CLONES="${SKIP_CLONES:-0}"
+SKIP_HELPERS="${SKIP_HELPERS:-0}"
 
 clone_or_update_repo() {
   local repo_url="$1"
@@ -58,9 +60,11 @@ install_helper_if_present() {
   fi
 }
 
-clone_or_update_repo "https://github.com/tuffgniuz/hyprland.git" "$CONFIG_DIR/hypr"
-clone_or_update_repo "https://github.com/tuffgniuz/waybar.git" "$CONFIG_DIR/waybar"
-clone_or_update_repo "https://github.com/tuffgniuz/nvim.lua.git" "$CONFIG_DIR/nvim"
+if [ "$SKIP_CLONES" != "1" ]; then
+  clone_or_update_repo "https://github.com/tuffgniuz/hyprland.git" "$CONFIG_DIR/hypr"
+  clone_or_update_repo "https://github.com/tuffgniuz/waybar.git" "$CONFIG_DIR/waybar"
+  clone_or_update_repo "https://github.com/tuffgniuz/nvim.lua.git" "$CONFIG_DIR/nvim"
+fi
 
 link_config_path "fish"
 link_config_path "ghostty"
@@ -72,8 +76,10 @@ link_config_path "wofi"
 link_config_path "yazi"
 link_config_path "zathura"
 
-install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-hypr-theme-command.sh"
-install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-desktop-theme-command.sh"
-install_helper_if_present "$CONFIG_DIR/waybar/scripts/install-waybar-theme-command.sh"
+if [ "$SKIP_HELPERS" != "1" ]; then
+  install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-hypr-theme-command.sh"
+  install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-desktop-theme-command.sh"
+  install_helper_if_present "$CONFIG_DIR/waybar/scripts/install-waybar-theme-command.sh"
+fi
 
 echo "==> Bootstrap complete"

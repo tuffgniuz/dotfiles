@@ -36,6 +36,17 @@ If you want package installation too:
 
 That script uses `pacman` for official packages and `paru` for AUR packages when available.
 
+## CI and testing
+
+The installer supports CI-safe smoke tests:
+
+```bash
+SKIP_CLONES=1 SKIP_HELPERS=1 XDG_CONFIG_HOME="$(mktemp -d)" ./install.sh
+```
+
+These flags skip external repo clones and helper-script execution, which makes it
+safe to test the symlink and backup behavior in GitHub Actions.
+
 ## Existing machine
 
 Run the installer again whenever you want to relink the tracked config set,
