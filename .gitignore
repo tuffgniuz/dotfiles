@@ -1,0 +1,5 @@
+local-overrides.sh
+*.log
+config/fish/env.local.fish
+config/fish/fish_variables
+config/fish/fish_history

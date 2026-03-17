@@ -1,0 +1,11 @@
+window {
+  font-size: 18px;
+  font-family: "Terminess Nerd Font Mono"
+}
+
+#entry:selected {
+}
+
+image {
+  margin: .25em;
+}

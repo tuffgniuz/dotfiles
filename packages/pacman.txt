@@ -1,0 +1,12 @@
+# Core tools
+git
+neovim
+kitty
+ghostty
+zathura
+zathura-pdf-mupdf
+mako
+waybar
+hyprland
+hyprpaper
+hyprlock

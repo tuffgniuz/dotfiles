@@ -1,0 +1,85 @@
+* {
+    /* Gruvbox Material Colors */
+    // bg: #282828;
+    bg: #1d2021;
+    fg: #d4be98;
+    accent: #ea6962;
+    
+    font: "VictorMono Nerd Font Mono 11";
+
+    background-color: @bg;
+    text-color: @fg;
+    
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+configuration {
+    show-icons: true;
+    }
+
+window {
+    width: 33%;
+    border: 1px;
+    border-color: @accent;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+inputbar {
+    children: [ entry ];
+    padding: 4px;
+    background-color: @bg;
+    border-radius: 10px;
+    margin: 0 0 10px 0;
+}
+
+prompt {
+    background-color: @accent;
+    text-color: @bg;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 0 10px 0 0;
+}
+
+entry {
+    background-color: #32302f; /* Slightly lighter than bg for contrast */
+    text-color: @fg;
+    padding: 10px 16px;
+    border-radius: 10px;
+    placeholder: "Search...";
+    vertical-align: 0.5;
+}
+
+listview {
+    lines: 8;
+    columns: 1;
+    scrollbar: false;
+    margin: 10px 0 0 0;
+}
+
+element {
+    padding: 12px;
+    margin: 4px 0;
+    border-radius: 10px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color: @bg;
+    border: 2px;
+    border-color: @accent;
+}
+
+element-text {
+    background-color: inherit;
+    text-color: inherit;
+    vertical-align: 0.5;
+}
+
+element-icon {
+    size: 32px;
+    margin: 0 10px 0 0;
+    background-color: inherit;
+}

@@ -1,0 +1,10 @@
+[status]
+overall = { bg = "#1d2021", fg = "#d4be98" }
+
+separator_open  = { fg = "#1d2021" }
+separator_close = { fg = "#1d2021" }
+
+progress_label  = { fg = "#a9b665" }
+progress_normal = { fg = "#a9b665" }
+progress_error  = { fg = "#ea6962" }
+

@@ -1,0 +1,4 @@
+# Shared layout/behavior plus one active theme include.
+# Switch themes by changing the second include line.
+include=~/.config/mako/base.conf
+include=~/.config/mako/themes/gruvbox.conf

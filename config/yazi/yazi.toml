@@ -1,0 +1,7 @@
+[manager]
+show_hidden = false
+
+[status]
+left  = ["cwd"]
+right = ["position"]
+
