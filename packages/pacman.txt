@@ -23,3 +23,4 @@ udiskie
 discord
 qt5ct
 qt6ct
+nwg-look
