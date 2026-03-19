@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  smoke-test:
+    name: "Smoke Test (Symlinks)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run installer smoke test
+        working-directory: ./dotfiles
+        env:
+          XDG_CONFIG_HOME: ${{ runner.temp }}/config
+          SKIP_CLONES: "1"
+          SKIP_HELPERS: "1"
+        run: |
+          set -euo pipefail
+          mkdir -p "$XDG_CONFIG_HOME"
+          ./install.sh
+
+  test-packages:
+    name: "Test Package Installation (Arch)"
+    # This job only runs if the package lists or the installer script itself changes.
+    if: "contains(github.event.head_commit.message, '[force ci]') || (github.event.action != 'closed' && (contains(join(github.event.commits.*.modified, ' '), 'packages/') || contains(join(github.event.commits.*.added, ' '), 'packages/') || contains(join(github.event.commits.*.removed, ' '), 'packages/') || contains(join(github.event.commits.*.modified, ' '), 'scripts/install-packages.sh') || contains(join(github.event.commits.*.added, ' '), 'scripts/install-packages.sh') || contains(join(github.event.commits.*.removed, ' '), 'scripts/install-packages.sh')))"
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Prepare Arch Linux container
+        run: |
+          pacman-key --init
+          pacman-key --populate
+          pacman -Syu --noconfirm
+          pacman -S --needed --noconfirm base-devel git sudo
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install paru and run package installer
+        working-directory: ./dotfiles
+        run: |
+          # Create a non-root user to build and run paru
+          useradd -m builder -G wheel
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          
+          # Change ownership of the workspace to the builder user
+          chown -R builder:builder .
+          
+          # Execute the rest of the script as the builder user
+          sudo -u builder bash -c '
+            set -euo pipefail
+            
+            echo "--- Cloning and installing paru ---"
+            git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
+            cd /tmp/paru-bin
+            makepkg -si --noconfirm
+            
+            echo "--- Running install-packages.sh from workspace ---"
+            cd -
+            ./scripts/install-packages.sh --noconfirm
+          '
