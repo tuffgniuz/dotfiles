@@ -26,14 +26,14 @@ install_pacman_packages() {
 }
 
 install_aur_packages() {
-  if ! command -v paru >/dev/null 2>&1; then
-    echo "paru not found; skipping AUR package install."
-    return
-  fi
-
   mapfile -t packages < <(grep -vE '^\s*($|#)' "$AUR_PACKAGES_FILE")
   if [ "${#packages[@]}" -eq 0 ]; then
     return
+  fi
+
+  if ! command -v paru >/dev/null 2>&1; then
+    echo "::error::paru not found, but is required to install AUR packages."
+    exit 1
   fi
 
   # shellcheck disable=SC2086
