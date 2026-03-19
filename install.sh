@@ -125,7 +125,7 @@ ensure_paru() {
 
   build_root="$(mktemp -d)"
   paru_dir="$build_root/paru"
-  trap 'rm -rf "$build_root"' RETURN
+  trap '[[ -n "${build_root:-}" ]] && rm -rf -- "${build_root}"' RETURN
 
   echo "==> Cloning paru from $PARU_REPO_URL"
   git clone --depth 1 "$PARU_REPO_URL" "$paru_dir"
