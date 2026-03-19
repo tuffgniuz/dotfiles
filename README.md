@@ -35,12 +35,6 @@ cd ~/dotfiles
 bootstraps `paru` from `https://github.com/Morganamilo/paru`, then links the
 tracked config and runs the helper installers.
 
-If you only want the package step:
-
-```bash
-./scripts/install-packages.sh
-```
-
 ## CI and testing
 
 The installer supports CI-safe setup tests:
@@ -79,7 +73,5 @@ dotfiles/
   packages/
     pacman.txt
     aur.txt
-  scripts/
-    install-packages.sh
   install.sh
 ```

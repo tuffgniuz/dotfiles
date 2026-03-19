@@ -30,7 +30,7 @@ jobs:
           install -d -o builder -g builder /tmp/xdg-config
           chown -R builder:builder "$GITHUB_WORKSPACE"
 
-          # Execute the installer as the non-root user, which is required for makepkg.
+          # Execute the installer as the non-root user, which is required for paru bootstrap.
           su - builder -c "
             set -euo pipefail
             export XDG_CONFIG_HOME=/tmp/xdg-config
