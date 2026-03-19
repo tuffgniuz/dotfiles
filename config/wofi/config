@@ -1,2 +1,4 @@
 allow_images=true
 width=30%
+lines=10
+dynamic_lines=false

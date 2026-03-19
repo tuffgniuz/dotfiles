@@ -1,11 +1,68 @@
+@import url("/home/tuffgniuz/.config/wofi/themes/rozejin.css");
+
 window {
-  font-size: 18px;
-  font-family: "Terminess Nerd Font Mono"
+    margin: 0px;
+    padding: 15px;
+    border: 2px solid @bg_reference;
+    background-color: @bg;
+    border-radius: 12px;
+    font-family: "Victor Mono", "VictorMono", monospace;
+    font-size: 18px;
+    color: @fg;
+}
+
+#input {
+    margin: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: @bg_popup; /* Different color from the main bg */
+    color: @fg;
+    outline: none;
+    box-shadow: none;
+}
+
+#input:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+#inner-box {
+    margin: 10px;
+    border: none;
+    background-color: transparent;
+}
+
+#outer-box {
+    margin: 10px;
+    border: none;
+    background-color: transparent;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 5px;
+    border: none;
+    color: @fg;
 }
 
 #entry:selected {
+    background-color: @bg_visual;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+}
+
+#entry {
+    border: none;
+    outline: none;
 }
 
 image {
-  margin: .25em;
+    margin: .25em;
 }

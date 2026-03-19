@@ -1,0 +1,25 @@
+# rozejin for Ghostty
+
+palette = 0=#1d2021
+palette = 1=#de6f8f
+palette = 2=#bfd2c0
+palette = 3=#d8c299
+palette = 4=#b7c5de
+palette = 5=#c9b3d9
+palette = 6=#aac3cf
+palette = 7=#c8b7bb
+palette = 8=#433b3e
+palette = 9=#ff9fc0
+palette = 10=#d6e5d6
+palette = 11=#e5d1a6
+palette = 12=#c9d5ea
+palette = 13=#e7b9c9
+palette = 14=#c1d6df
+palette = 15=#eadfe2
+
+background = #1d2021
+foreground = #eadfe2
+cursor-color = #ff9fc0
+cursor-text = #1d2021
+selection-background = #43313a
+selection-foreground = #eadfe2

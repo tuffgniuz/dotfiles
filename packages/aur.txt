@@ -1,2 +1,2 @@
-# Fonts
 ttf-victor-mono-nerd
+ttf-jetbrains-mono-nerd

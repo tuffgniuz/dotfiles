@@ -1,0 +1,26 @@
+/* Core Palette */
+@define-color bg #1d2021;
+@define-color bg_soft #222526;
+@define-color bg_statusline #181b1c;
+@define-color bg_float #202324;
+@define-color bg_popup #242728;
+@define-color bg_cursorline #252829;
+@define-color bg_visual #43313a;
+@define-color bg_search #4a3841;
+@define-color bg_reference #353039;
+
+@define-color fg #eadfe2;
+@define-color fg_soft #c8b7bb;
+@define-color fg_faint #a08c91;
+@define-color fg_nc #7d6f73;
+
+/* Syntax & Accent Colors */
+@define-color rose #ff9fc0;
+@define-color rose_soft #e7b9c9;
+@define-color red #de6f8f;
+@define-color orange #d8a07b;
+@define-color yellow #e5d1a6;
+@define-color green #bfd2c0;
+@define-color aqua #aac3cf;
+@define-color blue #b7c5de;
+@define-color purple #c9b3d9;

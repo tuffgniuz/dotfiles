@@ -1,6 +1,6 @@
 # Dotfiles
 
-This repository is the bootstrap layer for a small curated set of local config.
+This repository is the bootstrap layer for a small curated set of local config to setup my system.
 
 It keeps these `~/.config` entries:
 
@@ -10,6 +10,7 @@ It keeps these `~/.config` entries:
 - `mako`
 - `rofi`
 - `themes`
+- `tmux`
 - `wofi`
 - `yazi`
 - `zathura`
