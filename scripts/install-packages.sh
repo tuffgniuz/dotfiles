@@ -6,6 +6,7 @@ PACMAN_PACKAGES_FILE="$DOTFILES_DIR/packages/pacman.txt"
 AUR_PACKAGES_FILE="$DOTFILES_DIR/packages/aur.txt"
 PARU_REPO_URL="${PARU_REPO_URL:-https://github.com/Morganamilo/paru.git}"
 PACMAN_BOOTSTRAP_PACKAGES=(base-devel git)
+PARU_SOURCE_BOOTSTRAP_PACKAGES=(rust)
 SUDO_CMD=()
 PACMAN_ARGS=(--needed)
 PARU_ARGS=(--needed)
@@ -111,11 +112,28 @@ ensure_paru() {
   echo "==> Cloning paru from $PARU_REPO_URL"
   git clone --depth 1 "$PARU_REPO_URL" "$paru_dir"
 
-  echo "==> Building paru"
-  (
-    cd "$paru_dir"
-    makepkg -si --needed "${PACMAN_ARGS[@]}"
-  )
+  if [ -f "$paru_dir/PKGBUILD" ]; then
+    echo "==> Building paru with makepkg"
+    (
+      cd "$paru_dir"
+      makepkg -si --needed "${PACMAN_ARGS[@]}"
+    )
+    return
+  fi
+
+  if [ -f "$paru_dir/Cargo.toml" ]; then
+    echo "==> Building paru with cargo"
+    install_with_pacman "${PARU_SOURCE_BOOTSTRAP_PACKAGES[@]}"
+    (
+      cd "$paru_dir"
+      cargo build --release --locked
+    )
+    "${SUDO_CMD[@]}" install -Dm755 "$paru_dir/target/release/paru" /usr/local/bin/paru
+    return
+  fi
+
+  echo "Unable to bootstrap paru from $PARU_REPO_URL: no PKGBUILD or Cargo.toml found." >&2
+  exit 1
 }
 
 install_aur_packages() {
