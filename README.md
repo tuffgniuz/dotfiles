@@ -6,6 +6,8 @@ It keeps these `~/.config` entries:
 
 - `fish`
 - `ghostty`
+- `gtk-3.0`
+- `gtk-4.0`
 - `kitty`
 - `mako`
 - `rofi`

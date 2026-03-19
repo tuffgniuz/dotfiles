@@ -12,3 +12,14 @@ hyprpaper
 hyprlock
 wofi
 tmux
+pipewire
+pipewire-pulse
+pipewire-alsa
+pipewire-jack
+bluez
+bluez-utils
+blueman
+udiskie
+discord
+qt5ct
+qt6ct

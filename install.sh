@@ -68,6 +68,8 @@ fi
 
 link_config_path "fish"
 link_config_path "ghostty"
+link_config_path "gtk-3.0"
+link_config_path "gtk-4.0"
 link_config_path "kitty"
 link_config_path "mako"
 link_config_path "rofi"
