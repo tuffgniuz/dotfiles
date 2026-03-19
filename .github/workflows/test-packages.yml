@@ -1,0 +1,38 @@
+name: Test Package Installation
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'scripts/install-packages.sh'
+      - 'packages/pacman.txt'
+      - 'packages/aur.txt'
+  pull_request:
+    paths:
+      - 'scripts/install-packages.sh'
+      - 'packages/pacman.txt'
+      - 'packages/aur.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  test-arch-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --needed git sudo --noconfirm
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Make script runnable as root
+        run: sed -i 's/sudo pacman/pacman/' scripts/install-packages.sh
+
+      - name: Run package installer
+        run: ./scripts/install-packages.sh
