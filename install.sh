@@ -18,6 +18,10 @@ PARU_ARGS=(--needed)
 PACMAN_PACKAGES=()
 AUR_PACKAGES=()
 
+log_section() {
+  printf '\n==> %s\n' "$1"
+}
+
 parse_args() {
   while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -276,6 +280,7 @@ install_helper_if_present() {
 
 install_packages_if_needed() {
   if [ "$SKIP_PACKAGES" = "1" ]; then
+    echo "==> Skipping package installation"
     return
   fi
 
@@ -297,11 +302,15 @@ parse_args "$@"
 install_packages_if_needed
 
 if [ "$SKIP_CLONES" != "1" ]; then
+  log_section "Cloning or updating external config repos"
   clone_or_update_repo "https://github.com/tuffgniuz/hyprland.git" "$CONFIG_DIR/hypr"
   clone_or_update_repo "https://github.com/tuffgniuz/waybar.git" "$CONFIG_DIR/waybar"
   clone_or_update_repo "https://github.com/tuffgniuz/nvim.lua.git" "$CONFIG_DIR/nvim"
+else
+  echo "==> Skipping external repo clones"
 fi
 
+log_section "Linking tracked config"
 link_config_path "fish"
 link_config_path "ghostty"
 link_config_path "gtk-3.0"
@@ -313,12 +322,17 @@ link_config_path "tmux"
 link_config_path "wofi"
 link_config_path "yazi"
 link_config_path "zathura"
+
+log_section "Installing themes"
 copy_data_path "themes"
 
 if [ "$SKIP_HELPERS" != "1" ]; then
+  log_section "Installing helper commands"
   install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-hypr-theme-command.sh"
   install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-desktop-theme-command.sh"
   install_helper_if_present "$CONFIG_DIR/waybar/scripts/install-waybar-theme-command.sh"
+else
+  echo "==> Skipping helper installers"
 fi
 
 echo "==> Bootstrap complete"
