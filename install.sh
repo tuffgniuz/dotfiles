@@ -3,6 +3,7 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
 PACMAN_PACKAGES_FILE="$DOTFILES_DIR/packages/pacman.txt"
 AUR_PACKAGES_FILE="$DOTFILES_DIR/packages/aur.txt"
 PARU_REPO_URL="${PARU_REPO_URL:-https://github.com/Morganamilo/paru.git}"
@@ -181,6 +182,28 @@ clone_or_update_repo() {
   git clone "$repo_url" "$target_dir"
 }
 
+clear_path_if_managed() {
+  local source_path="$1"
+  local target_path="$2"
+  local backup_path=
+
+  if [ -L "$target_path" ]; then
+    local current_target
+    current_target="$(readlink -f "$target_path")"
+    if [ "$current_target" = "$source_path" ]; then
+      echo "==> Removing legacy $target_path"
+      rm "$target_path"
+      return
+    fi
+  fi
+
+  if [ -e "$target_path" ]; then
+    backup_path="${target_path}.backup.$(date +%Y%m%d%H%M%S)"
+    echo "==> Backing up existing $target_path to $backup_path"
+    mv "$target_path" "$backup_path"
+  fi
+}
+
 link_config_path() {
   local rel_path="$1"
   local source_path="$DOTFILES_DIR/config/$rel_path"
@@ -205,6 +228,41 @@ link_config_path() {
 
   echo "==> Linking $target_path"
   ln -s "$source_path" "$target_path"
+}
+
+copy_data_path() {
+  local rel_path="$1"
+  local source_path="$DOTFILES_DIR/config/$rel_path"
+  local target_path="$DATA_DIR/$rel_path"
+  local legacy_config_path="$CONFIG_DIR/$rel_path"
+  local backup_path=
+  local entry=
+
+  if [ ! -d "$source_path" ]; then
+    echo "Skipping $source_path because it does not exist."
+    return
+  fi
+
+  clear_path_if_managed "$source_path" "$legacy_config_path"
+  mkdir -p "$(dirname "$target_path")"
+
+  if [ -e "$target_path" ] || [ -L "$target_path" ]; then
+    backup_path="${target_path}.backup.$(date +%Y%m%d%H%M%S)"
+    echo "==> Backing up existing $target_path to $backup_path"
+    mv "$target_path" "$backup_path"
+  fi
+
+  echo "==> Copying $target_path"
+  mkdir -p "$target_path"
+
+  shopt -s dotglob nullglob
+  for entry in "$source_path"/*; do
+    if [ "$(basename "$entry")" = ".gitkeep" ]; then
+      continue
+    fi
+    cp -a "$entry" "$target_path/"
+  done
+  shopt -u dotglob nullglob
 }
 
 install_helper_if_present() {
@@ -251,11 +309,11 @@ link_config_path "gtk-4.0"
 link_config_path "kitty"
 link_config_path "mako"
 link_config_path "rofi"
-link_config_path "themes"
 link_config_path "tmux"
 link_config_path "wofi"
 link_config_path "yazi"
 link_config_path "zathura"
+copy_data_path "themes"
 
 if [ "$SKIP_HELPERS" != "1" ]; then
   install_helper_if_present "$CONFIG_DIR/hypr/scripts/install-hypr-theme-command.sh"

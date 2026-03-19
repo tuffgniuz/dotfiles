@@ -34,11 +34,13 @@ jobs:
           su - builder -c "
             set -euo pipefail
             export XDG_CONFIG_HOME=/tmp/xdg-config
+            export XDG_DATA_HOME=/tmp/xdg-data
             export SKIP_CLONES=1
             export SKIP_HELPERS=1
             cd \"$GITHUB_WORKSPACE\"
             ./install.sh --noconfirm
             test -L \"\$XDG_CONFIG_HOME/fish\"
             test -L \"\$XDG_CONFIG_HOME/tmux\"
+            test -d \"\$XDG_DATA_HOME/themes\"
             command -v paru >/dev/null
           "

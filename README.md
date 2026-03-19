@@ -11,11 +11,14 @@ It keeps these `~/.config` entries:
 - `kitty`
 - `mako`
 - `rofi`
-- `themes`
 - `tmux`
 - `wofi`
 - `yazi`
 - `zathura`
+
+It also copies:
+
+- `config/themes` to `~/.local/share/themes`
 
 It also bootstraps these standalone repos into `~/.config`:
 
@@ -40,11 +43,11 @@ tracked config and runs the helper installers.
 The installer supports CI-safe setup tests:
 
 ```bash
-SKIP_CLONES=1 SKIP_HELPERS=1 XDG_CONFIG_HOME="$(mktemp -d)" ./install.sh --noconfirm
+SKIP_CLONES=1 SKIP_HELPERS=1 XDG_CONFIG_HOME="$(mktemp -d)" XDG_DATA_HOME="$(mktemp -d)" ./install.sh --noconfirm
 ```
 
 These flags skip external repo clones and helper-script execution, which makes it
-safe to test the package bootstrap and symlink behavior in GitHub Actions.
+safe to test the package bootstrap, theme copy, and symlink behavior in GitHub Actions.
 
 ## Existing machine
 
