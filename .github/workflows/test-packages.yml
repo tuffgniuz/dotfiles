@@ -31,10 +31,5 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Make script non-interactive
-        run: |
-          sed -i 's/sudo pacman -S/pacman -S --noconfirm/' scripts/install-packages.sh
-          sed -i 's/paru -S/paru -S --noconfirm/' scripts/install-packages.sh
-
       - name: Run package installer
-        run: ./scripts/install-packages.sh
+        run: ./scripts/install-packages.sh --noconfirm
