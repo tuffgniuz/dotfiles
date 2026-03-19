@@ -31,24 +31,26 @@ cd ~/dotfiles
 ./install.sh
 ```
 
-If you want package installation too:
+`install.sh` is the single entrypoint. It installs the package lists first,
+bootstraps `paru` from `https://github.com/Morganamilo/paru`, then links the
+tracked config and runs the helper installers.
+
+If you only want the package step:
 
 ```bash
 ./scripts/install-packages.sh
 ```
 
-That script uses `pacman` for official packages and `paru` for AUR packages when available.
-
 ## CI and testing
 
-The installer supports CI-safe smoke tests:
+The installer supports CI-safe setup tests:
 
 ```bash
-SKIP_CLONES=1 SKIP_HELPERS=1 XDG_CONFIG_HOME="$(mktemp -d)" ./install.sh
+SKIP_CLONES=1 SKIP_HELPERS=1 XDG_CONFIG_HOME="$(mktemp -d)" ./install.sh --noconfirm
 ```
 
 These flags skip external repo clones and helper-script execution, which makes it
-safe to test the symlink and backup behavior in GitHub Actions.
+safe to test the package bootstrap and symlink behavior in GitHub Actions.
 
 ## Existing machine
 

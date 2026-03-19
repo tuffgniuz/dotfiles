@@ -3,8 +3,48 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+PACKAGES_SCRIPT="$DOTFILES_DIR/scripts/install-packages.sh"
 SKIP_CLONES="${SKIP_CLONES:-0}"
 SKIP_HELPERS="${SKIP_HELPERS:-0}"
+SKIP_PACKAGES="${SKIP_PACKAGES:-0}"
+PACKAGE_ARGS=()
+
+parse_args() {
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      -y|--noconfirm)
+        PACKAGE_ARGS+=("--noconfirm")
+        ;;
+      --skip-clones)
+        SKIP_CLONES=1
+        ;;
+      --skip-helpers)
+        SKIP_HELPERS=1
+        ;;
+      --skip-packages)
+        SKIP_PACKAGES=1
+        ;;
+      -h|--help)
+        cat <<'EOF'
+Usage: ./install.sh [options]
+
+Options:
+  -y, --noconfirm    Pass --noconfirm to the package installer
+  --skip-packages    Skip package installation
+  --skip-clones      Skip external repo clones/updates
+  --skip-helpers     Skip helper installer scripts
+  -h, --help         Show this help message
+EOF
+        exit 0
+        ;;
+      *)
+        echo "Unknown option: $1" >&2
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
 
 clone_or_update_repo() {
   local repo_url="$1"
@@ -59,6 +99,23 @@ install_helper_if_present() {
     "$script_path"
   fi
 }
+
+install_packages_if_needed() {
+  if [ "$SKIP_PACKAGES" = "1" ]; then
+    return
+  fi
+
+  if [ ! -x "$PACKAGES_SCRIPT" ]; then
+    echo "Skipping package install because $PACKAGES_SCRIPT is not executable."
+    return
+  fi
+
+  echo "==> Installing packages"
+  "$PACKAGES_SCRIPT" "${PACKAGE_ARGS[@]}"
+}
+
+parse_args "$@"
+install_packages_if_needed
 
 if [ "$SKIP_CLONES" != "1" ]; then
   clone_or_update_repo "https://github.com/tuffgniuz/hyprland.git" "$CONFIG_DIR/hypr"

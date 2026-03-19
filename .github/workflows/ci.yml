@@ -6,26 +6,8 @@ on:
   pull_request:
 
 jobs:
-  smoke-test:
-    name: "Smoke Test (Symlinks)"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Run installer smoke test
-        working-directory: ./dotfiles
-        env:
-          XDG_CONFIG_HOME: ${{ runner.temp }}/config
-          SKIP_CLONES: "1"
-          SKIP_HELPERS: "1"
-        run: |
-          set -euo pipefail
-          mkdir -p "$XDG_CONFIG_HOME"
-          ./install.sh
-
-  test-packages:
-    name: "Test Package Installation (Arch)"
+  setup-test:
+    name: "Setup Test (Arch)"
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
@@ -40,25 +22,23 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install paru and run package installer
+      - name: Run full setup
         run: |
           # Create a non-root user to build and run paru
           useradd -m builder -G wheel
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-          
-          # Change ownership of the checked out repo to the builder user
-          chown -R builder:builder /github/workspace
-          
-          # Execute the rest of the script as the builder user, which is required for makepkg
-          su - builder -c '
+          install -d -o builder -g builder /tmp/xdg-config
+          chown -R builder:builder "$GITHUB_WORKSPACE"
+
+          # Execute the installer as the non-root user, which is required for makepkg.
+          su - builder -c "
             set -euo pipefail
-            
-            echo "--- Cloning and installing paru ---"
-            git clone https://aur.archlinux.org/paru-bin.git /tmp/paru-bin
-            cd /tmp/paru-bin
-            makepkg -si --noconfirm
-            
-            echo "--- Running install-packages.sh from workspace ---"
-            cd /github/workspace/dotfiles
-            ./scripts/install-packages.sh --noconfirm
-          '
+            export XDG_CONFIG_HOME=/tmp/xdg-config
+            export SKIP_CLONES=1
+            export SKIP_HELPERS=1
+            cd \"$GITHUB_WORKSPACE\"
+            ./install.sh --noconfirm
+            test -L \"\$XDG_CONFIG_HOME/fish\"
+            test -L \"\$XDG_CONFIG_HOME/tmux\"
+            command -v paru >/dev/null
+          "
